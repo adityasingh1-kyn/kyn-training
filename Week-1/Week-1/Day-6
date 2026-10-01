@@ -1,0 +1,67 @@
+# score_evaluator.py
+
+def classify_score(score: float) -> tuple[str, str]:
+    """Return a tuple of (letter_grade, status) based on a numeric score."""
+    if score >= 90:
+        return "A", "Distinction"
+    elif score >= 75:
+        return "B", "Pass"
+    elif score >= 60:
+        return "C", "Pass"
+    elif score >= 50:
+        return "D", "Pass (Borderline)"
+    return "F", "Fail"
+
+
+def print_evaluation_report(records: list[tuple[str, float]]) -> None:
+    """Format and print candidate evaluation records with a summary."""
+    print(f"\n{'Candidate':<12} | {'Score':<6} | {'Grade':<6} | {'Status'}")
+    print("-" * 42)
+
+    passed_count = 0
+    for name, score in records:
+        grade, status = classify_score(score)
+        if "Pass" in status or status == "Distinction":
+            passed_count += 1
+        print(f"{name:<12} | {score:<6.1f} | {grade:<6} | {status}")
+
+    print("-" * 42)
+    total = len(records)
+    print(f"Total: {total} | Passed: {passed_count} | Failed: {total - passed_count}\n")
+
+
+def get_valid_score(prompt: str) -> float:
+    """Prompt user repeatedly until a valid numeric score (0 to 100) is entered."""
+    while True:
+        raw_val = input(prompt).strip()
+        try:
+            score = float(raw_val)
+            if 0.0 <= score <= 100.0:
+                return score
+            print("Error: Score must be between 0 and 100. Try again.")
+        except ValueError:
+            print("Error: Invalid numeric format. Please enter a valid number.")
+
+
+def main():
+    # 1. Existing batch of candidate records
+    candidate_records = [
+        ("Aarav", 92.0),
+        ("Priya", 78.5),
+        ("Rohan", 58.0),
+        ("Simran", 84.0),
+        ("Karan", 45.0),
+    ]
+
+    # 2. Interactive entry with guaranteed exit condition via validation loop
+    print("Add a new candidate evaluation:")
+    name = input("Enter candidate name: ").strip() or "Anonymous"
+    score = get_valid_score("Enter score (0-100): ")
+    candidate_records.append((name, score))
+
+    # 3. Execute report function
+    print_evaluation_report(candidate_records)
+
+
+if __name__ == "__main__":
+    main()
