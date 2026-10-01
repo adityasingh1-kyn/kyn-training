@@ -1,0 +1,41 @@
+# score_classifier.py
+
+# 1. Sample Data: List of tuples containing (Candidate Name, Numeric Score)
+candidates = [
+    ("Aarav", 92),
+    ("Priya", 78),
+    ("Rohan", 58),
+    ("Simran", 84),
+    ("Karan", 45),
+]
+
+print(f"{'Candidate':<12} | {'Score':<6} | {'Grade':<6} | {'Status'}")
+print("-" * 38)
+
+# 2. Iteration: Loop through each record using tuple unpacking
+for name, score in candidates:
+    # 3. Decision Logic: Conditional evaluation
+    if score >= 90:
+        grade = "A"
+        status = "Distinction"
+    elif score >= 75:
+        grade = "B"
+        status = "Pass"
+    elif score >= 60:
+        grade = "C"
+        status = "Pass"
+    elif score >= 50:
+        grade = "D"
+        status = "Pass (Borderline)"
+    else:
+        grade = "F"
+        status = "Fail"
+
+    # 4. Formatted Display
+    print(f"{name:<12} | {score:<6} | {grade:<6} | {status}")
+
+print("-" * 38)
+
+# Summary calculation using a loop and conditions
+passing_count = sum(1 for _, score in candidates if score >= 50)
+print(f"Total Evaluated: {len(candidates)} | Passed: {passing_count} | Failed: {len(candidates) - passing_count}")
