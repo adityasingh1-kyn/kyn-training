@@ -1,0 +1,39 @@
+# inventory_tracker.py
+
+# 1. TUPLE: Immutable store metadata (Store Name, Warehouse ID)
+store_location = ("Central Depot", "WH-08")
+
+# 2. LIST: Sequential list of tracked item SKUs
+sku_catalog = ["SKU-101", "SKU-102", "SKU-103", "SKU-101"]
+
+# 3. SET: Deduplicate SKUs to get unique items
+unique_skus = set(sku_catalog)
+
+# 4. DICTIONARY: Structured item details indexed by SKU
+inventory_details = {
+    "SKU-101": {"name": "Mechanical Keyboard", "price": 89.99, "stock": 14},
+    "SKU-102": {"name": "Wireless Mouse", "price": 45.50, "stock": 25},
+    "SKU-103": {"name": "USB-C Hub", "price": 29.00, "stock": 8},
+}
+
+# --- Output & Iteration ---
+
+print(f"Store: {store_location[0]} (ID: {store_location[1]})")
+print(f"Total entries scanned: {len(sku_catalog)} | Unique SKUs: {len(unique_skus)}\n")
+
+print(f"{'SKU':<10} | {'Item Name':<22} | {'Price':>8} | {'Stock':>6}")
+print("-" * 54)
+
+# Iterate over unique SKUs and look up values in the dictionary
+for sku in sorted(unique_skus):
+    item = inventory_details.get(sku)
+    if item:
+        name = item["name"]
+        price = item["price"]
+        stock = item["stock"]
+        print(f"{sku:<10} | {name:<22} | ${price:>7.2f} | {stock:>6}")
+
+# Calculate total asset valuation using a generator expression
+total_value = sum(item["price"] * item["stock"] for item in inventory_details.values())
+print("-" * 54)
+print(f"Total Inventory Value: ${total_value:,.2f}")
