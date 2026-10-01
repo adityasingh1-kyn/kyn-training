@@ -1,0 +1,22 @@
+# calculator_intro.py
+
+# 1. Input: Capture user's name (string)
+user_name = input("Enter your name: ").strip()
+
+# 2. Input & Type Casting: Capture numbers and convert to float for flexible math
+num1 = float(input("Enter first number: "))
+num2 = float(input("Enter second number: "))
+
+# 3. Expressions & Arithmetic Operations
+sum_result = num1 + num2
+product_result = num1 * num2
+diff_result = num1 - num2
+
+# 4. Formatted Output using f-strings
+print("\n" + "=" * 30)
+print(f"Hello, {user_name}!")
+print(f"Here is your calculation summary:")
+print(f"  • {num1} + {num2} = {sum_result:.2f}")
+print(f"  • {num1} - {num2} = {diff_result:.2f}")
+print(f"  • {num1} × {num2} = {product_result:.2f}")
+print("=" * 30)
