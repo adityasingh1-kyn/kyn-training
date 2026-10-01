@@ -1,0 +1,80 @@
+"""
+inventory_manager_clean.py
+Module for managing catalog items, stock calculations, and tabular reporting.
+"""
+
+from copy import deepcopy
+from typing import NamedTuple
+
+
+class StoreLocation(NamedTuple):
+    name: str
+    warehouse_id: str
+
+
+# 1. Type Definitions & Static Data
+DEFAULT_LOCATION = StoreLocation(name="Central Depot", warehouse_id="WH-08")
+
+INITIAL_INVENTORY: dict[str, dict[str, float | int | str]] = {
+    "SKU-101": {"name": "Mechanical Keyboard", "unit_price": 89.99, "stock_quantity": 14},
+    "SKU-102": {"name": "Wireless Mouse", "unit_price": 45.50, "stock_quantity": 25},
+    "SKU-103": {"name": "USB-C Hub", "unit_price": 29.00, "stock_quantity": 8},
+}
+
+
+def calculate_total_valuation(catalog: dict[str, dict[str, float | int | str]]) -> float:
+    """Calculate the cumulative asset value across all tracked stock items."""
+    return sum(
+        float(item["unit_price"]) * int(item["stock_quantity"])
+        for item in catalog.values()
+    )
+
+
+def apply_discount(
+    catalog: dict[str, dict[str, float | int | str]],
+    discount_rate: float
+) -> dict[str, dict[str, float | int | str]]:
+    """Return a deep copy of catalog with discounted prices without mutating original state."""
+    discounted_catalog = deepcopy(catalog)
+    for item in discounted_catalog.values():
+        item["unit_price"] = round(float(item["unit_price"]) * (1.0 - discount_rate), 2)
+    return discounted_catalog
+
+
+def display_inventory_report(
+    catalog: dict[str, dict[str, float | int | str]],
+    location: StoreLocation,
+    title: str = "INVENTORY REPORT"
+) -> None:
+    """Format and print an inventory table with calculated totals."""
+    divider = "-" * 56
+    print(f"\n{title}")
+    print(f"Location: {location.name} [{location.warehouse_id}]")
+    print(divider)
+    print(f"{'SKU':<10} | {'Item Name':<22} | {'Price':>8} | {'Stock':>6}")
+    print(divider)
+
+    for sku, details in sorted(catalog.items()):
+        print(
+            f"{sku:<10} | "
+            f"{details['name']:<22} | "
+            f"${details['unit_price']:>7.2f} | "
+            f"{details['stock_quantity']:>6}"
+        )
+
+    print(divider)
+    total_val = calculate_total_valuation(catalog)
+    print(f"Total Valuation: ${total_val:>37,.2f}\n")
+
+
+def main() -> None:
+    # Display baseline inventory
+    display_inventory_report(INITIAL_INVENTORY, DEFAULT_LOCATION, "STANDARD PRICING")
+
+    # Generate promotional view via defensive copy (original remains untouched)
+    promo_catalog = apply_discount(INITIAL_INVENTORY, discount_rate=0.10)
+    display_inventory_report(promo_catalog, DEFAULT_LOCATION, "PROMOTIONAL PRICING (-10%)")
+
+
+if __name__ == "__main__":
+    main()
